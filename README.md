@@ -1,4 +1,4 @@
-# MauiScript
+# 🌺 MauiScript
 
 **A modern DSL for .NET MAUI that ditches the angle brackets.**
 
