@@ -1,74 +1,85 @@
 # MauiScript
 
-A modern Domain-Specific Language (DSL) for building .NET MAUI UI as an alternative to XAML.
+**A modern DSL for .NET MAUI that ditches the angle brackets.**
+
+```
+// MauiScript
+Stack.vertical
+    Text "Welcome back"
+        .style($Title)
+    Entry
+        .text(@Email)
+        .placeholder("Email")
+    Button "Sign In"
+        .command(@LoginCommand)
+        .style($PrimaryButton)
+```
+
+```xml
+<!-- The XAML equivalent -->
+<VerticalStackLayout>
+    <Label Text="Welcome back" 
+           Style="{StaticResource Title}" />
+    <Entry Text="{Binding Email}" 
+           Placeholder="Email" />
+    <Button Text="Sign In" 
+            Command="{Binding LoginCommand}"
+            Style="{StaticResource PrimaryButton}" />
+</VerticalStackLayout>
+```
 
 MauiScript is an opinionated, pragmatic DSL that:
-- Dramatically reduces the verbosity and angle-bracket ceremony of XAML
-- Feels familiar to developers from SwiftUI, Jetpack Compose, React, and Vue
-- Targets full .NET MAUI feature parity (bindings, resources, layouts, animations)
-- Is designed to be transpiled to C# at build time with strong tooling support
 
-The initiative started from a simple question:
-> If we were designing a UI language for .NET MAUI *today*—for 2025/2026 developers across web, iOS, and Android—what would it look like, and why would they choose it over XAML?
+- **Cuts the ceremony** — no `<`, `>`, `{Binding ...}`, or `StaticResource` boilerplate
+- **Feels familiar** — borrows from SwiftUI, Jetpack Compose, React, and Vue
+- **Targets full parity** — bindings, resources, layouts, animations, platform blocks
+- **Transpiles to C#** — Roslyn source generator at build time, not runtime interpretation
 
-MauiScript is the answer we are exploring.
+> If we were designing a UI language for .NET MAUI *today*—for 2025/2026 developers across iOS, Android, and web—what would it look like?
 
----
-
-## Key Documents
-
-### 1. MauiScript Language Specification (Start Here)
-
-**File:** `docs/spec/MauiScript-Specification.md`
-
-This is the *canonical* document for MauiScript. It:
-- Defines the syntax and semantics of the DSL
-- Explains design decisions, trade-offs, and influences (SwiftUI, Compose, React, CSS)
-- Walks through a full real-world example (e.g., a login page) with:
-  - Layout composition
-  - Data bindings (one-way, two-way, commands)
-  - Resource references
-  - Styled/interactive text
-  - Loading and error states
-- Describes how MauiScript can be transpiled to C# at build time
-
-If you want to understand what MauiScript is and why it exists, **read the spec first**.
+MauiScript is the answer we're building.
 
 ---
 
-### 2. Development Plan
+## At a Glance
 
-**File:** `docs/DEVELOPMENT-PLAN.md`
-
-A high-level, phased roadmap for taking MauiScript from idea to an announcement-ready Todo app and beyond. It covers:
-- Repository and solution structure
-- Phased milestones (core language, samples, tooling, ecosystem)
-- .NET 10 / .NET MAUI 10 alignment
-- Tooling (source generator, CLI, VS Code/VS extensions)
-- Risks and mitigation strategies
-
-Use this if you want to understand *how* we plan to build MauiScript.
+| | XAML | MauiScript |
+|---|------|------------|
+| **Binding** | `{Binding Email}` | `@Email` |
+| **Two-way** | `{Binding Email, Mode=TwoWay}` | `@Email` (inferred) |
+| **Resource** | `{StaticResource Primary}` | `$Primary` |
+| **Command** | `Command="{Binding Login}"` | `.command(@Login)` |
+| **Modifier** | `Margin="16" Padding="8"` | `.margin(16).padding(8)` |
+| **Conditional** | `IsVisible="{Binding HasError}"` | `when @HasError` block |
 
 ---
 
-### 3. Roadmap Checklist
+## Documentation
 
-**File:** `docs/ROADMAP-CHECKLIST.md`
+### [Language Specification](docs/spec/MauiScript-Specification.md) — start here
+<sub>[`docs/spec/MauiScript-Specification.md`](docs/spec/MauiScript-Specification.md)</sub>
 
-A task-level checklist derived from the development plan. It provides:
-- Concrete `[ ]` items for each phase and milestone
-- Superscript complexity indicators (¹–⁴) for each task
-- A quick way to track implementation progress against the plan
+The canonical reference. Covers syntax, semantics, design rationale, and a complete login page example demonstrating bindings, resources, styled text, and loading states. If you want to understand *what* MauiScript is, this is the document.
 
-Use this if you’re working on MauiScript and want to know **what to do next**.
+### [Development Plan](docs/DEVELOPMENT-PLAN.md)
+<sub>[`docs/DEVELOPMENT-PLAN.md`](docs/DEVELOPMENT-PLAN.md)</sub>
+
+Phased roadmap from "Todo App MVP" to full ecosystem. Covers repo structure, .NET 10 alignment, tooling (source generator, CLI, VS Code extension), and risk mitigation.
+
+### [Roadmap Checklist](docs/ROADMAP-CHECKLIST.md)
+<sub>[`docs/ROADMAP-CHECKLIST.md`](docs/ROADMAP-CHECKLIST.md)</sub>
+
+Task-level tracker with complexity indicators. For contributors who want to know what to work on next.
 
 ---
 
-## Contributing & Feedback
+## Status
 
-Right now, MauiScript is an experiment. Feedback is welcome on:
-- The DSL design itself (syntax, readability, ergonomics)
-- The feasibility of the transpilation strategy
-- Tooling expectations for a modern MAUI UI language
+MauiScript is currently in the **design and specification phase**. The language spec is largely complete; implementation has not yet begun.
 
-If you’re coming from SwiftUI, Compose, React, or XAML and have strong opinions about UI languages, the spec is written with you in mind—please start there and file issues or notes based on your experience.
+We're looking for feedback on:
+- Syntax and ergonomics — does this feel right?
+- Transpilation strategy — Roslyn source generators vs. alternatives
+- Tooling expectations — what would make you actually use this?
+
+If you've shipped UI in SwiftUI, Compose, React, or XAML and have opinions, the spec was written with you in mind. Start there, then open an issue.
