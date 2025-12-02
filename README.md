@@ -1,6 +1,8 @@
 # 🌺 MauiScript
 
-**A modern DSL for .NET MAUI that ditches the angle brackets.**
+![Status](https://img.shields.io/badge/Status-RFC%20%2F%20Specification-007ACC?style=flat-square)
+
+**A modern, terse DSL for .NET MAUI that compiles to C#.**
 
 ```
 // MauiScript
@@ -28,12 +30,19 @@ Stack.vertical
 </VerticalStackLayout>
 ```
 
+| Metric | XAML | MauiScript |
+|--------|------|------------|
+| Lines | 14 | 11 |
+| Characters | ~450 | ~210 |
+| Noise | High (`< > "" {}`) | Low |
+
 MauiScript is an opinionated, pragmatic DSL that:
 
-- **Cuts the ceremony** — no `<`, `>`, `{Binding ...}`, or `StaticResource` boilerplate
-- **Feels familiar** — borrows from SwiftUI, Jetpack Compose, React, and Vue
-- **Targets full parity** — bindings, resources, layouts, animations, platform blocks
-- **Transpiles to C#** — Roslyn source generator at build time, not runtime interpretation
+- **Zero XML** — no closing tags, no namespaces, no angle-bracket noise
+- **Universal syntax** — `@Property` for bindings, `$Resource` for resources, `.modifier()` chains
+- **Type-safe transpilation** — compiles to C# Fluent Markup; if it compiles, it runs
+- **Built-in "hard stuff"** — `@Value | converter` pipes, `.loading(@IsBusy)` shorthand, `.iOS { }` platform blocks
+- **Tailwind-style shorthands** — `.p(16)`, `.m(8)`, `.center`
 
 > If we were designing a UI language for .NET MAUI *today*—for 2025/2026 developers across iOS, Android, and web—what would it look like?
 
@@ -51,6 +60,49 @@ MauiScript is the answer we're building.
 | **Command** | `Command="{Binding Login}"` | `.command(@Login)` |
 | **Modifier** | `Margin="16" Padding="8"` | `.margin(16).padding(8)` |
 | **Conditional** | `IsVisible="{Binding HasError}"` | `when @HasError` block |
+
+---
+
+## Real-World Example
+
+MauiScript handles production complexity—styled text, conditional visibility, platform-specific blocks:
+
+```mauiscript
+page LoginPage
+  @viewmodel: LoginViewModel
+
+  SafeArea > Scroll
+    Stack.vertical.spacing(24).p(24)
+
+      Image "logo.png"
+        .size(100)
+        .center
+
+      Card.p(20).corner(12)
+        Stack.vertical.spacing(16)
+
+          Entry
+            .placeholder("Email address")
+            .text(@Email)
+            .keyboard(email)
+
+          Entry
+            .placeholder("Password")
+            .secure(@!ShowPassword)    // inverted binding
+            .text(@Password)
+
+          when @HasError
+            Text @ErrorMessage
+              .color($ErrorColor)
+              .animate(fade)
+
+          Button "Sign In"
+            .style($PrimaryButton)
+            .command(@LoginCommand)
+            .loading(@IsLoading)       // auto-spinner
+```
+
+See the [full specification](docs/spec/MauiScript-Specification.md) for the complete login page with social auth, legal text, and platform blocks.
 
 ---
 
